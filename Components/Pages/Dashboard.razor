@@ -1,0 +1,113 @@
+@page "/dashboard"
+
+@using ihcux_racha_ai_blazor.Models
+
+<PageTitle>Dashboard</PageTitle>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">
+            Olá, Luan 👋
+        </h2>
+
+        <button class="btn btn-primary shadow">
+            + Novo Gasto
+        </button>
+    </div>
+
+    <div class="row mb-4">
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-0 bg-success text-white">
+                <div class="card-body">
+                    <h6>Total a Receber</h6>
+                    <h3>R$ 1285,00</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-0 bg-danger text-white">
+                <div class="card-body">
+                    <h6>Total a Pagar</h6>
+                    <h3>R$ 486,40</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-0 bg-primary text-white">
+                <div class="card-body">
+                    <h6>Saldo Geral</h6>
+                    <h3>R$ 798,60</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <input
+        class="form-control mb-4"
+        placeholder="Buscar grupo..."
+        @bind="busca"
+        @bind:event="oninput" />
+
+    <h5 class="fw-bold mb-3">
+        Seus grupos ativos
+    </h5>
+
+    @if (GruposFiltrados.Any())
+    {
+        @foreach (var grupo in GruposFiltrados)
+        {
+            <GrupoCard Grupo="grupo" />
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Você ainda não participa de nenhum grupo.
+            Que tal criar um?
+        </div>
+    }
+
+</div>
+
+@code {
+
+    private string busca = "";
+
+    private List<Grupo> grupos = new()
+    {
+        new Grupo
+        {
+            Nome = "República Central",
+            Categoria = "Casa",
+            ValorPendente = 450.50m,
+            NoVermelho = true
+        },
+
+        new Grupo
+        {
+            Nome = "Churrasco de Domingo",
+            Categoria = "Lazer",
+            ValorPendente = 85.00m,
+            NoVermelho = false
+        },
+
+        new Grupo
+        {
+            Nome = "Viagem Floripa",
+            Categoria = "Viagem",
+            ValorPendente = 1200.00m,
+            NoVermelho = false
+        }
+    };
+
+    private List<Grupo> GruposFiltrados =>
+        grupos.Where(g =>
+            g.Nome.Contains(busca,
+            StringComparison.OrdinalIgnoreCase)
+        ).ToList();
+}
